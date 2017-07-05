@@ -2,6 +2,7 @@ package example.haim.mivtzaimprojv4;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -9,14 +10,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, PlaceSelectionListener {
 
+    private static final String TAGPLACES = "Places";
     @BindView(R.id.textView2)
     TextView textView2;
     @BindView(R.id.etFirstName)
@@ -30,6 +37,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     private Spinner spinner;
 
 
+    private Place place;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +50,12 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         new HourSpiner().invoke();
         new MinuteSpiner().invoke();
 
+        PlaceAutocompleteFragment autoCompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autoCompleteFragment.setOnPlaceSelectedListener(this);
     }
+
 
 
     @Override
@@ -55,6 +70,17 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // TODO Auto-generated method stub
+        Log.i(TAGPLACES, "Place not chosen ");
+    }
+
+    @Override
+    public void onPlaceSelected(Place place) {
+        Log.d(TAGPLACES, "Place: " + place.getName());
+    }
+
+    @Override
+    public void onError(Status status) {
+        Log.d(TAGPLACES, "An error occurred: " + status);
 
     }
 
@@ -85,7 +111,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
 
         }
     }
-
     private class HourSpiner {
         public void invoke() {
             spinner = (Spinner) findViewById(R.id.hourSpiner);
@@ -117,7 +142,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             spinner.setAdapter(dataAdapter);
         }
     }
-
     private class MinuteSpiner {
         public void invoke() {
             spinner = (Spinner) findViewById(R.id.minuteSpiner);

@@ -1,7 +1,5 @@
 <resources>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyB3L5Henz9g7HQhk7K0DJ9YkNBTvyTL47s
-    </string>
+
     <string name="app_name">MivtzaimProjV4</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
